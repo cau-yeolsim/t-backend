@@ -8,8 +8,10 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 fastapi = "^0.103.1"
-pydantic = "v1.10.13"
+pydantic = {version = "v1.10.13", extras = ["dotenv"]}
 uvicorn = "^0.23.2"
+langchain = "^0.0.304"
+openai = "^0.28.1"
 
 
 [build-system]
