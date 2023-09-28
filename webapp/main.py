@@ -1,8 +1,17 @@
 from fastapi import FastAPI
 
-app = FastAPI()
+from webapp import endpoints
+from webapp.containers import Container
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+def create_app() -> FastAPI:
+    container = Container()
+
+    fast_app = FastAPI()
+    fast_app.container = container
+    fast_app.include_router(endpoints.router)
+
+    return fast_app
+
+
+app = create_app()
