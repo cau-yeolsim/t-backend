@@ -13,4 +13,4 @@ class ProjectSettings(BaseSettings):
     SENTRY_DSN: str = Field(..., env="SENTRY_DSN")
 
 
-settings = ProjectSettings().dict()
+settings = ProjectSettings()
