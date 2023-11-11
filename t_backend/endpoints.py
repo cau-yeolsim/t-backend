@@ -24,3 +24,8 @@ router = APIRouter(route_class=TimedRoute)
 @router.get("/health")
 async def health():
     return {"status": "ok"}
+
+
+@router.get("/error")
+async def error():
+    raise AssertionError
