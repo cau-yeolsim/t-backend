@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 import sentry_sdk
 
-from settings import settings
+from t_backend.settings import settings
 from t_backend.containers import Container
 from t_backend.routers.core import router as core_router
 from t_backend.routers.message import router as message_router
