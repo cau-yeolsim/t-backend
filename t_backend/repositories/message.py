@@ -15,7 +15,11 @@ class MessageRepository:
         self.session_factory = session_factory
 
     def get_messages(self, chat_id: int) -> list[Type[Message]]:
-        stmt = select(Message).where(Message.id == chat_id)
+        stmt = (
+            select(Message)
+            .where(Message.chat_id == chat_id)
+            .order_by(Message.id.desc())
+        )
         with self.session_factory() as session:
             return list(session.scalars(stmt))
 

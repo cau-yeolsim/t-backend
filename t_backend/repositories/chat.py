@@ -34,7 +34,7 @@ class ChatRepository:
                 .outerjoin(
                     Message, Message.id == latest_message_subquery.c.latest_message_id
                 )
-            )
+            ).order_by(Chat.id.desc())
 
     def create(self) -> Chat:
         new_chat = Chat(title="", profile_img_url="", created_at=get_now())
