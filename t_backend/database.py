@@ -1,14 +1,35 @@
+from contextlib import contextmanager, AbstractContextManager
+from typing import Callable
+
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
-
-from t_backend.settings import settings
-
-SQLALCHEMY_DATABASE_URL = settings.SQLALCHEMY_DATABASE_URL
-
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
+from sqlalchemy import orm
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import Session
 
 Base = declarative_base()
+
+
+class Database:
+    def __init__(self, db_url: str) -> None:
+        self._engine = create_engine(db_url, echo=True)
+        self._session_factory = orm.scoped_session(
+            orm.sessionmaker(
+                autocommit=False,
+                autoflush=False,
+                bind=self._engine,
+            ),
+        )
+
+    def create_database(self) -> None:
+        Base.metadata.create_all(self._engine)
+
+    @contextmanager
+    def session(self) -> Callable[..., AbstractContextManager[Session]]:
+        session: Session = self._session_factory()
+        try:
+            yield session
+        except Exception:
+            session.rollback()
+            raise
+        finally:
+            session.close()
