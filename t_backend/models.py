@@ -18,4 +18,5 @@ class Message(Base):
     id = Column(Integer, primary_key=True, index=True)
     content = Column(Text)
     created_by = Column(String(length=20))
+    created_at = Column(DateTime)
     chat_id = Column(Integer, ForeignKey("chat.id"))

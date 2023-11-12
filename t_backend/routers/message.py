@@ -1,33 +1,32 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from dependency_injector.wiring import Provide, inject
+
+from t_backend.containers import Container
+from t_backend.dtos.request import MessageRequest
+from t_backend.dtos.response import MessageResponse, MessageListResponse
+from t_backend.services.message import MessageService
 
 router = APIRouter(prefix="/messages")
 
 
-@router.post("", status_code=201)
-async def create_message():
-    return {
-        "id": 1,
-        "content": "안녕하세요 저는 티로에요! 아직 말을 할 줄 모른답니다 ㅎㅎ",
-        "created_by": "TIRO",
-        "chat_id": 1,
-    }
+@router.post("/{chat_id}", status_code=201)
+@inject
+async def create_message(
+    chat_id: int,
+    message_request: MessageRequest,
+    message_service: MessageService = Depends(Provide[Container.message_service]),
+) -> MessageResponse:
+    new_message = message_service.create_message(
+        chat_id=chat_id, content=message_request.content
+    )
+    return MessageResponse.from_orm(new_message)
 
 
 @router.get("/{chat_id}")
-async def get_message_list(chat_id: int):
-    """
-
-    :param chat_id: 채팅방 id
-    :return: 채팅의 메시지 리스트를 반환합니다.
-    """
-    return {
-        "chat_id": chat_id,
-        "messages": [
-            {
-                "id": 1,
-                "content": "안녕하세요 저는 티로에요! 아직 말을 할 줄 모른답니다 ㅎㅎ",
-                "created_by": "TIRO",
-                "chat_id": 1,
-            }
-        ],
-    }
+@inject
+async def get_message_list(
+    chat_id: int,
+    message_service: MessageService = Depends(Provide[Container.message_service]),
+) -> MessageListResponse:
+    messages = message_service.get_chat_list(chat_id=chat_id)
+    return MessageListResponse(messages=messages)

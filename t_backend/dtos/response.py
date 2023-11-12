@@ -15,3 +15,18 @@ class ChatResponse(BaseModel):
 
 class ChatListResponse(BaseModel):
     chats: list[ChatResponse]
+
+
+class MessageResponse(BaseModel):
+    id: int
+    content: str
+    created_at: datetime.datetime
+    created_by: str
+    chat_id: int
+
+    class Config:
+        orm_mode = True
+
+
+class MessageListResponse(BaseModel):
+    messages: list[MessageResponse]
