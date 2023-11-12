@@ -14,15 +14,15 @@ class MessageRepository:
     ) -> None:
         self.session_factory = session_factory
 
-    def get_all(self, chat_id: int) -> list[Type[Message]]:
+    def get_messages(self, chat_id: int) -> list[Type[Message]]:
         stmt = select(Message).where(Message.id == chat_id)
         with self.session_factory() as session:
             return list(session.scalars(stmt))
 
-    def create(self, chat_id: int, content: str) -> Message:
+    def create_message(self, chat_id: int, content: str, is_user: bool) -> Message:
         new_message = Message(
             content=content,
-            created_by="TIRO",
+            created_by="USER" if is_user else "TIRO",
             created_at=get_now(),
             chat_id=chat_id,
         )
