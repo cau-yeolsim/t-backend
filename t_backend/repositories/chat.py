@@ -19,8 +19,7 @@ class ChatRepository:
         with self.session_factory() as session:
             latest_message_subquery = (
                 session.query(
-                    Message.chat_id,
-                    func.max(Message.created_at).label("message_created_at"),
+                    Message.chat_id, func.max(Message.id).label("latest_message_id")
                 )
                 .group_by(Message.chat_id)
                 .subquery("latest_message")
@@ -33,12 +32,7 @@ class ChatRepository:
                     Chat.id == latest_message_subquery.c.chat_id,
                 )
                 .outerjoin(
-                    Message,
-                    and_(
-                        Chat.id == Message.chat_id,
-                        Message.created_at
-                        == latest_message_subquery.c.message_created_at,
-                    ),
+                    Message, Message.id == latest_message_subquery.c.latest_message_id
                 )
             )
 
