@@ -6,7 +6,7 @@ class ChatService:
         self._repository = chat_repository
 
     def create_chat(self):
-        pass
+        return self._repository.create()
 
     def get_chat_list(self):
         return self._repository.get_all()

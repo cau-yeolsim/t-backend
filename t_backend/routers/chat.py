@@ -1,24 +1,20 @@
-import datetime
-
+from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter
 from fastapi import Depends
 
 from t_backend.containers import Container
+from t_backend.dtos.response import ChatListResponse, ChatResponse
 from t_backend.services.chat import ChatService
-from dependency_injector.wiring import Provide, inject
-from t_backend.dtos.response import ChatListResponse
 
 router = APIRouter(prefix="/chats")
 
 
 @router.post("", status_code=201)
-async def create_chat():
-    return {
-        "id": 1,
-        "title": "티로와의 이야기",
-        "profile_img_url": "https://images.pexels.com/photos/1808329/pexels-photo-1808329.jpeg",
-        "created_at": datetime.datetime.now(),
-    }
+@inject
+async def create_chat(
+    chat_service: ChatService = Depends(Provide[Container.chat_service]),
+) -> ChatResponse:
+    return ChatResponse.from_orm(chat_service.create_chat())
 
 
 @router.get("")
