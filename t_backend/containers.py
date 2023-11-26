@@ -4,6 +4,7 @@ from t_backend import routers
 from t_backend.database import Database
 from t_backend.repositories.chat import ChatRepository
 from t_backend.repositories.message import MessageRepository
+from t_backend.repositories.openai import OpenAIRepository
 from t_backend.services.chat import ChatService
 from t_backend.services.message import MessageService
 from t_backend.settings import settings
@@ -20,9 +21,14 @@ class Container(containers.DeclarativeContainer):
     )
     chat_service = providers.Factory(ChatService, chat_repository=chat_repository)
 
+    openai_repository = providers.Factory(OpenAIRepository)
+
     message_repository = providers.Factory(
-        MessageRepository, session_factory=db.provided.session
+        MessageRepository,
+        session_factory=db.provided.session,
     )
     message_service = providers.Factory(
-        MessageService, message_repository=message_repository
+        MessageService,
+        message_repository=message_repository,
+        openai_repository=openai_repository,
     )
