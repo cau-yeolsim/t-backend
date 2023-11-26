@@ -9,6 +9,7 @@ class MessageResponse(BaseModel):
     created_at: datetime.datetime
     created_by: str
     chat_id: int
+    is_complete: bool
 
     class Config:
         orm_mode = True

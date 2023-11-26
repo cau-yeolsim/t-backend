@@ -29,6 +29,7 @@ class MessageRepository:
             created_by="USER" if is_user else "TIRO",
             created_at=get_now(),
             chat_id=chat_id,
+            is_complete=False,
         )
         with self.session_factory() as session:
             session.add(new_message)
