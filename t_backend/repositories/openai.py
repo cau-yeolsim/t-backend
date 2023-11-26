@@ -9,6 +9,7 @@ from langchain.prompts import (
     ChatPromptTemplate,
 )
 
+from t_backend.constants import END_SIGN
 from t_backend.langchain.prompts import SYSTEM_TEMPLATE, HUMAN_TEMPLATE
 from t_backend.settings import settings
 
@@ -33,7 +34,7 @@ class OpenAIRepository:
             HUMAN_TEMPLATE
         )
 
-    def send_message(self, message_id: str, content: str) -> str:
+    def send_message(self, message_id: int, content: str):
         chat_prompt_template = ChatPromptTemplate.from_messages(
             [self.system_message_prompt_template, self.human_message_prompt_template]
         )
@@ -45,5 +46,5 @@ class OpenAIRepository:
         full_content = ""
         for chunk in self.chat.stream(final_prompt):
             full_content += chunk.content
-            self._redis_client.set(message_id, full_content)
-        return full_content
+            self._redis_client.set(str(message_id), full_content)
+        full_content += END_SIGN

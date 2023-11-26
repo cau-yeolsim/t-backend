@@ -28,6 +28,7 @@ class Container(containers.DeclarativeContainer):
     message_repository = providers.Factory(
         MessageRepository,
         session_factory=db.provided.session,
+        redis_client=redis_client,
     )
     message_service = providers.Factory(
         MessageService,

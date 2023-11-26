@@ -9,7 +9,7 @@ from t_backend.services.message import MessageService
 router = APIRouter(prefix="/messages")
 
 
-@router.post("/{chat_id}", status_code=201)
+@router.post("/chat/{chat_id}", status_code=201)
 @inject
 async def create_message(
     chat_id: int,
@@ -22,7 +22,7 @@ async def create_message(
     return MessageResponse.from_orm(new_message)
 
 
-@router.get("/{chat_id}")
+@router.get("/chat/{chat_id}")
 @inject
 async def get_message_list(
     chat_id: int,
@@ -32,9 +32,11 @@ async def get_message_list(
     return MessageListResponse(messages=messages)
 
 
-@router.websocket("/message/{message_id}")
-async def websocket_endpoint(message_id: int, websocket: WebSocket):
-    await websocket.accept()
-    while True:
-        data = await websocket.receive_json()
-        await websocket.send_text(f"3 Message text was: {data}")
+@router.get("/message/{message_id}")
+@inject
+async def get_message_list(
+    message_id: int,
+    message_service: MessageService = Depends(Provide[Container.message_service]),
+) -> MessageResponse:
+    message = message_service.get_message(message_id=message_id)
+    return MessageResponse.from_orm(message)
