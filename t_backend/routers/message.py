@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Depends, WebSocket
 from dependency_injector.wiring import Provide, inject
+from fastapi import APIRouter, Depends, HTTPException
 
 from t_backend.containers import Container
 from t_backend.dtos.request import MessageRequest
@@ -39,4 +39,6 @@ async def get_message_list(
     message_service: MessageService = Depends(Provide[Container.message_service]),
 ) -> MessageResponse:
     message = message_service.get_message(message_id=message_id)
+    if not message:
+        raise HTTPException(status_code=404, detail="Message not found")
     return MessageResponse.from_orm(message)

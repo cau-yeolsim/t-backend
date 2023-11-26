@@ -12,4 +12,4 @@ fi
 docker build -t "${IMAGE_NAME}" .
 
 # 새 컨테이너 실행
-docker run -d --name "${CONTAINER_NAME}" -p 8000:8000 "${IMAGE_NAME}"
+docker-compose up -d

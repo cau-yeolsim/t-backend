@@ -44,9 +44,11 @@ class MessageRepository:
             session.refresh(new_message)
             return new_message
 
-    def get_message(self, message_id: int) -> Message | None:
+    def get_message(self, message_id: int) -> Type[Message] | None:
         with self.session_factory() as session:
             message = session.get(Message, message_id)
+            if not message:
+                return None
             content = self._redis_client.get(str(message_id))
             message.content = content.decode("utf-8")
             if END_SIGN in content.decode("utf-8"):

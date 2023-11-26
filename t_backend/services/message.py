@@ -33,5 +33,5 @@ class MessageService:
     def get_message_list(self, chat_id: int) -> list[Type[Message]]:
         return self._message_repository.get_messages(chat_id=chat_id)
 
-    def get_message(self, message_id: int) -> Message:
+    def get_message(self, message_id: int) -> Type[Message] | None:
         return self._message_repository.get_message(message_id=message_id)
