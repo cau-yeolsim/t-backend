@@ -8,6 +8,7 @@ from t_backend.repositories.openai import OpenAIRepository
 from t_backend.services.chat import ChatService
 from t_backend.services.message import MessageService
 from t_backend.settings import settings
+from redis import Redis
 
 
 class Container(containers.DeclarativeContainer):
@@ -15,13 +16,14 @@ class Container(containers.DeclarativeContainer):
 
     config = providers.Configuration()
     db = providers.Singleton(Database, db_url=settings.SQLALCHEMY_DATABASE_URL)
+    redis_client = providers.Singleton(Redis, host=settings.REDIS_URL, port=6379)
 
     chat_repository = providers.Factory(
         ChatRepository, session_factory=db.provided.session
     )
     chat_service = providers.Factory(ChatService, chat_repository=chat_repository)
 
-    openai_repository = providers.Factory(OpenAIRepository)
+    openai_repository = providers.Factory(OpenAIRepository, redis_client=redis_client)
 
     message_repository = providers.Factory(
         MessageRepository,
