@@ -30,4 +30,4 @@ class Message(Base):
 
     @property
     def content(self):
-        return aes_decrypt(self.encrypted_content.encode("utf-8"))
+        return aes_decrypt(self.encrypted_content)

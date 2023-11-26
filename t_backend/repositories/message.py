@@ -33,7 +33,7 @@ class MessageRepository:
 
     def create_message(self, chat_id: int, content: str, is_user: bool) -> Message:
         new_message = Message(
-            content=aes_encrypt(content),
+            encrypted_content=aes_encrypt(content),
             created_by="USER" if is_user else "TIRO",
             created_at=get_now(),
             chat_id=chat_id,
@@ -50,11 +50,13 @@ class MessageRepository:
             message = session.get(Message, message_id)
             if not message:
                 return None
-            content: str = self._redis_client.get(str(message_id)).decode("utf-8")
+            content = self._redis_client.get(str(message_id))
+            content = content.decode("utf-8") if content else ""
             message.encrypted_content = aes_encrypt(content)
             if END_SIGN in content:
                 content = content.replace(END_SIGN, "")
                 message.encrypted_content = aes_encrypt(content)
                 message.is_complete = True
+                session.add(message)
                 session.commit()
         return message

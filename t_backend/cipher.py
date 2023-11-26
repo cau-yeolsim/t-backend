@@ -9,16 +9,16 @@ cipher = AES.new(settings.AES_KEY, mode=AES.MODE_ECB)
 
 
 def aes_encrypt(data: str) -> bytes:
-    block_size = 64
+    data = data.encode("utf-8")
+    block_size = 16
     padding_length = block_size - (len(data) % block_size)
-    data += chr(padding_length) * padding_length
-    data = base64.b64encode(data.encode())
-    return binascii.hexlify(cipher.encrypt(data))
+    data += bytes([padding_length]) * padding_length
+    encrypted_data = cipher.encrypt(data)
+    return binascii.hexlify(encrypted_data)
 
 
 def aes_decrypt(data: bytes) -> str:
-    decrypted = cipher.decrypt(binascii.unhexlify(data))
-    decrypted = base64.b64decode(decrypted)
-    padding_length = decrypted[-1]
-    decrypted = decrypted[:-padding_length]
-    return decrypted.decode("utf-8")
+    decrypted_data = cipher.decrypt(binascii.unhexlify(data))
+    padding_length = decrypted_data[-1]
+    decrypted_data = decrypted_data[:-padding_length]
+    return decrypted_data.decode("utf-8", errors="ignore")
