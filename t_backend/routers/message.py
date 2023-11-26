@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, WebSocket
 from dependency_injector.wiring import Provide, inject
 
 from t_backend.containers import Container
@@ -30,3 +30,11 @@ async def get_message_list(
 ) -> MessageListResponse:
     messages = message_service.get_chat_list(chat_id=chat_id)
     return MessageListResponse(messages=messages)
+
+
+@router.websocket("/message/{message_id}")
+async def websocket_endpoint(message_id: int, websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        data = await websocket.receive_json()
+        await websocket.send_text(f"3 Message text was: {data}")

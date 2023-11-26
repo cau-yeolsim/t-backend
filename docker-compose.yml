@@ -1,0 +1,10 @@
+services:
+
+  web:
+    build: .
+    command: poetry run uvicorn t_backend.main:app --host 0.0.0.0 --port 8000
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
