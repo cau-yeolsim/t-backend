@@ -14,6 +14,7 @@ class ProjectSettings(BaseSettings):
     SQLALCHEMY_DATABASE_URL: str = Field(..., env="SQLALCHEMY_DATABASE_URL")
     REDIS_URL: str = Field(..., env="REDIS_URL")
     REDIS_PORT: int = Field(..., env="REDIS_PORT")
+    AES_KEY: bytes = Field(..., env="AES_KEY")
 
 
 settings = ProjectSettings()
