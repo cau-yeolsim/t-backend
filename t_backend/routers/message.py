@@ -33,7 +33,7 @@ async def get_message_list(
     return MessageListResponse(messages=messages)
 
 
-@router.get("{message_id}", summary="특정 ID 메시지 조회 (polling 시 사용)")
+@router.get("/{message_id}", summary="특정 ID 메시지 조회 (polling 시 사용)")
 @inject
 async def get_message(
     message_id: int,
