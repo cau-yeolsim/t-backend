@@ -1,4 +1,3 @@
-from redis import Redis
 from langchain.chat_models import ChatOpenAI
 from langchain.chat_models.base import (
     BaseChatModel,
@@ -8,6 +7,8 @@ from langchain.prompts import (
     HumanMessagePromptTemplate,
     ChatPromptTemplate,
 )
+from langchain.schema.messages import BaseMessage
+from redis import Redis
 
 from t_backend.constants import END_SIGN
 from t_backend.langchain.prompts import SYSTEM_TEMPLATE, HUMAN_TEMPLATE
@@ -34,15 +35,14 @@ class OpenAIRepository:
             HUMAN_TEMPLATE
         )
 
-    def send_message(self, message_id: int, content: str):
+    def send_message(self, message_id: int, messages: list[BaseMessage]):
         chat_prompt_template = ChatPromptTemplate.from_messages(
             [self.system_message_prompt_template, self.human_message_prompt_template]
         )
-        final_prompt = chat_prompt_template.format_prompt(
+        final_prompt = chat_prompt_template.from_messages(messages).format_prompt(
             output_language="ko",
             max_words=15,
-            sample_text=content,
-        ).to_messages()
+        )
         full_content = ""
         for chunk in self.chat.stream(final_prompt):
             full_content += chunk.content

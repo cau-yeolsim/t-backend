@@ -1,6 +1,7 @@
-import random
 from threading import Thread
 from typing import Type
+
+from langchain.schema.messages import BaseMessage, SystemMessage, HumanMessage
 
 from t_backend.models import Message
 from t_backend.repositories.message import MessageRepository
@@ -25,10 +26,20 @@ class MessageService:
             chat_id=chat_id, content="", is_user=False
         )
         thread = Thread(
-            target=self._openai_repository.send_message, args=(message.id, content)
+            target=self._openai_repository.send_message,
+            args=(message.id, self._get_messages(chat_id)),
         )
         thread.start()
         return message
+
+    def _get_messages(self, chat_id: int) -> list[BaseMessage]:
+        message_list = self.get_message_list(chat_id=chat_id)
+        return [
+            SystemMessage(content=message.content)
+            if message.created_by == "TIRO"
+            else HumanMessage(content=message.content)
+            for message in message_list
+        ]
 
     def get_message_list(self, chat_id: int) -> list[Type[Message]]:
         return self._message_repository.get_messages(chat_id=chat_id)
