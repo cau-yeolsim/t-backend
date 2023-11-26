@@ -1,5 +1,6 @@
-services:
+version: "3.8"
 
+services:
   web:
     image: tiro
     container_name: tiro
