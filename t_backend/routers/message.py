@@ -28,7 +28,7 @@ async def get_message_list(
     chat_id: int,
     message_service: MessageService = Depends(Provide[Container.message_service]),
 ) -> MessageListResponse:
-    messages = message_service.get_chat_list(chat_id=chat_id)
+    messages = message_service.get_message_list(chat_id=chat_id)
     return MessageListResponse(messages=messages)
 
 

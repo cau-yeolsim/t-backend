@@ -23,5 +23,5 @@ class MessageService:
             chat_id=chat_id, content=random.choice(bot_contents), is_user=False
         )
 
-    def get_chat_list(self, chat_id: int):
+    def get_message_list(self, chat_id: int):
         return self._repository.get_messages(chat_id=chat_id)
