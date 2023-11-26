@@ -9,7 +9,7 @@ from t_backend.services.chat import ChatService
 router = APIRouter(prefix="/chats")
 
 
-@router.post("", status_code=201)
+@router.post("", status_code=201, summary="채팅방 생성")
 @inject
 async def create_chat(
     chat_service: ChatService = Depends(Provide[Container.chat_service]),
@@ -17,7 +17,7 @@ async def create_chat(
     return ChatResponse.from_orm(chat_service.create_chat())
 
 
-@router.get("")
+@router.get("", summary="채팅방 목록 조회")
 @inject
 async def get_chat_list(
     chat_service: ChatService = Depends(Provide[Container.chat_service]),
