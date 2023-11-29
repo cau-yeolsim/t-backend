@@ -53,13 +53,12 @@ class MessageRepository:
             content = self._redis_client.get(str(message_id))
             content = content.decode("utf-8") if content else ""
             message.encrypted_content = aes_encrypt(content)
-            if END_SIGN in content:
-                content = content.replace(END_SIGN, "")
-                message.encrypted_content = aes_encrypt(content)
-                message.is_complete = True
-                session.add(message)
-                session.commit()
         return message
+
+    def get_cached_message_content(self, message_id: int) -> str:
+        content = self._redis_client.get(str(message_id))
+        content = content.decode("utf-8") if content else ""
+        return content
 
     def update_is_complete_true(self, message_id: int, content: str):
         with self.session_factory() as session:

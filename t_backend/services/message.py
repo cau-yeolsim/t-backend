@@ -3,6 +3,7 @@ from typing import Type
 
 from langchain.schema.messages import BaseMessage, SystemMessage, HumanMessage
 
+from t_backend.cipher import aes_encrypt
 from t_backend.models import Message
 from t_backend.repositories.message import MessageRepository
 from t_backend.repositories.openai import OpenAIRepository
@@ -50,7 +51,13 @@ class MessageService:
         ]
 
     def get_message_list(self, chat_id: int) -> list[Type[Message]]:
-        return self._message_repository.get_messages(chat_id=chat_id)
+        messages = self._message_repository.get_messages(chat_id=chat_id)
+        for message in messages:
+            if not message.is_complete:
+                message.encrypted_content = aes_encrypt(
+                    self._message_repository.get_cached_message_content(message.id)
+                )
+        return messages
 
     def get_message(self, message_id: int) -> Type[Message] | None:
         return self._message_repository.get_message(message_id=message_id)
