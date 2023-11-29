@@ -24,7 +24,7 @@ class OpenAIRepository:
         self.chat = ChatOpenAI(
             temperature=0,
             openai_api_key=settings.OPENAI_API_KEY,
-            model_name="gpt-3.5-turbo",
+            model_name="gpt-4",
             streaming=True,
         )
         self._redis_client = redis_client
