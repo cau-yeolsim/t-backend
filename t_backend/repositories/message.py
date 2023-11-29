@@ -34,7 +34,7 @@ class MessageRepository:
     def create_message(self, chat_id: int, content: str, is_user: bool) -> Message:
         new_message = Message(
             encrypted_content=aes_encrypt(content),
-            created_by="USER" if is_user else "TIRO",
+            created_by="me" if is_user else "TIRO",
             created_at=get_now(),
             chat_id=chat_id,
             is_complete=True if is_user else False,
