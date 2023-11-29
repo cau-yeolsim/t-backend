@@ -60,3 +60,11 @@ class MessageRepository:
                 session.add(message)
                 session.commit()
         return message
+
+    def update_is_complete_true(self, message_id: int, content: str):
+        with self.session_factory() as session:
+            message = session.get(Message, message_id)
+            message.is_complete = True
+            message.encrypted_content = aes_encrypt(content)
+            session.add(message)
+            session.commit()

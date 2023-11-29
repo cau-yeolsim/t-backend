@@ -35,7 +35,7 @@ class OpenAIRepository:
             HUMAN_TEMPLATE
         )
 
-    def send_message(self, message_id: int, messages: list[BaseMessage]):
+    def send_message(self, message_id: int, messages: list[BaseMessage]) -> str:
         chat_prompt_template = ChatPromptTemplate.from_messages(
             [self.system_message_prompt_template, self.human_message_prompt_template]
         )
@@ -47,4 +47,4 @@ class OpenAIRepository:
         for chunk in self.chat.stream(final_prompt):
             full_content += chunk.content
             self._redis_client.set(str(message_id), full_content)
-        full_content += END_SIGN
+        return full_content

@@ -26,11 +26,19 @@ class MessageService:
             chat_id=chat_id, content="", is_user=False
         )
         thread = Thread(
-            target=self._openai_repository.send_message,
+            target=self.send_message,
             args=(message.id, self._get_messages(chat_id)),
         )
         thread.start()
         return message
+
+    def send_message(self, message_id: int, messages: list[BaseMessage]):
+        content = self._openai_repository.send_message(
+            message_id=message_id, messages=messages
+        )
+        self._message_repository.update_is_complete_true(
+            message_id=message_id, content=content
+        )
 
     def _get_messages(self, chat_id: int) -> list[BaseMessage]:
         message_list = self.get_message_list(chat_id=chat_id)
