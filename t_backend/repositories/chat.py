@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session, aliased
 from sqlalchemy.orm.query import RowReturningQuery
 
 from t_backend.alembic.utils import get_now
+from t_backend.constants import TIRO_IMG_URL
 from t_backend.models import Chat, Message
 
 
@@ -37,7 +38,7 @@ class ChatRepository:
             ).order_by(Chat.id.desc())
 
     def create(self) -> Chat:
-        new_chat = Chat(title="", profile_img_url="", created_at=get_now())
+        new_chat = Chat(title="", profile_img_url=TIRO_IMG_URL, created_at=get_now())
         with self.session_factory() as session:
             session.add(new_chat)
             session.commit()
