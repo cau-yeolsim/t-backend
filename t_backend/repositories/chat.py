@@ -13,7 +13,8 @@ from t_backend.models import Chat, Message
 
 class ChatRepository:
     def __init__(
-        self, session_factory: Callable[..., AbstractContextManager[Session]]
+        self,
+        session_factory: Callable[..., AbstractContextManager[Session]],
     ) -> None:
         self.session_factory = session_factory
 

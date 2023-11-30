@@ -18,17 +18,21 @@ class Container(containers.DeclarativeContainer):
     db = providers.Singleton(Database, db_url=settings.SQLALCHEMY_DATABASE_URL)
     redis_client = providers.Singleton(Redis, host=settings.REDIS_URL, port=6379)
 
+    # repositories
+    openai_repository = providers.Factory(OpenAIRepository, redis_client=redis_client)
     chat_repository = providers.Factory(
         ChatRepository, session_factory=db.provided.session
     )
-    chat_service = providers.Factory(ChatService, chat_repository=chat_repository)
-
-    openai_repository = providers.Factory(OpenAIRepository, redis_client=redis_client)
-
     message_repository = providers.Factory(
         MessageRepository,
         session_factory=db.provided.session,
         redis_client=redis_client,
+    )
+    # services
+    chat_service = providers.Factory(
+        ChatService,
+        chat_repository=chat_repository,
+        message_repository=message_repository,
     )
     message_service = providers.Factory(
         MessageService,

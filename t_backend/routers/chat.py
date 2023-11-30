@@ -14,7 +14,14 @@ router = APIRouter(prefix="/chats")
 async def create_chat(
     chat_service: ChatService = Depends(Provide[Container.chat_service]),
 ) -> ChatResponse:
-    return ChatResponse.from_orm(chat_service.create_chat())
+    chat, message = chat_service.create_chat()
+    return ChatResponse(
+        id=chat.id,
+        title=chat.title,
+        profile_img_url=chat.profile_img_url,
+        created_at=chat.created_at,
+        last_message=message,
+    )
 
 
 @router.get("", summary="채팅방 목록 조회")
