@@ -3,7 +3,6 @@ from typing import Type
 
 from langchain.schema.messages import (
     BaseMessage,
-    SystemMessage,
     HumanMessage,
     AIMessage,
 )

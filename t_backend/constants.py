@@ -1,5 +1,3 @@
-END_SIGN = "::END::"
-
 TIRO_IMG_URLS = [
     "https://tiro-s3.s3.ap-northeast-2.amazonaws.com/tiro.png",
     "https://tiro-s3.s3.ap-northeast-2.amazonaws.com/robot.png",

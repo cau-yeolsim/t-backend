@@ -10,7 +10,6 @@ from langchain.prompts import (
 from langchain.schema.messages import BaseMessage
 from redis import Redis
 
-from t_backend.constants import END_SIGN
 from t_backend.langchain.prompts import SYSTEM_TEMPLATE, HUMAN_TEMPLATE
 from t_backend.settings import settings
 
