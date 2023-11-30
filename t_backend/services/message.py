@@ -1,7 +1,12 @@
 from threading import Thread
 from typing import Type
 
-from langchain.schema.messages import BaseMessage, SystemMessage, HumanMessage
+from langchain.schema.messages import (
+    BaseMessage,
+    SystemMessage,
+    HumanMessage,
+    AIMessage,
+)
 
 from t_backend.cipher import aes_encrypt
 from t_backend.models import Message
@@ -44,7 +49,7 @@ class MessageService:
     def _get_messages(self, chat_id: int) -> list[BaseMessage]:
         message_list = self.get_message_list(chat_id=chat_id)
         return [
-            SystemMessage(content=message.content)
+            AIMessage(content=message.content)
             if message.created_by == "TIRO"
             else HumanMessage(content=message.content)
             for message in message_list
