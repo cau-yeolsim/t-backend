@@ -30,13 +30,15 @@ class MessageRepository:
         with self.session_factory() as session:
             return list(session.scalars(stmt))
 
-    def create_message(self, chat_id: int, content: str, is_user: bool) -> Message:
+    def create_message(
+        self, chat_id: int, content: str, is_user: bool, is_complete: bool = False
+    ) -> Message:
         new_message = Message(
             encrypted_content=aes_encrypt(content),
             created_by="me" if is_user else "TIRO",
             created_at=get_now(),
             chat_id=chat_id,
-            is_complete=True if is_user else False,
+            is_complete=is_complete or (True if is_user else False),
         )
         with self.session_factory() as session:
             session.add(new_message)

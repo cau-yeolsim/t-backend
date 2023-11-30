@@ -18,7 +18,10 @@ class ChatService:
         chat = self._repository.create()
         greeting_text = random.choice(GREETING_TEXTS)
         message = self._message_repository.create_message(
-            chat_id=chat.id, content=greeting_text, is_user=False
+            chat_id=chat.id,
+            content=greeting_text,
+            is_user=False,
+            is_complete=True,
         )
         return chat, message
 
