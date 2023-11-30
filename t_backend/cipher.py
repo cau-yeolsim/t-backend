@@ -1,7 +1,6 @@
-import base64
+import binascii
 
 from Crypto.Cipher import AES
-import binascii
 
 from t_backend.settings import settings
 
