@@ -1,12 +1,11 @@
-from redis import Redis
-from sqlalchemy import select
 from contextlib import AbstractContextManager
 from typing import Callable, Type
 
+from redis import Redis
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from t_backend.alembic.utils import get_now
-from t_backend.constants import END_SIGN
 from t_backend.cipher import aes_encrypt
 from t_backend.models import Message
 
