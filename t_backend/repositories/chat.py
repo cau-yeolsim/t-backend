@@ -1,12 +1,13 @@
+import random
 from contextlib import AbstractContextManager
 from typing import Callable
 
-from sqlalchemy import func, and_
-from sqlalchemy.orm import Session, aliased
+from sqlalchemy import func
+from sqlalchemy.orm import Session
 from sqlalchemy.orm.query import RowReturningQuery
 
 from t_backend.alembic.utils import get_now
-from t_backend.constants import TIRO_IMG_URL
+from t_backend.constants import TIRO_IMG_URLS
 from t_backend.models import Chat, Message
 
 
@@ -40,7 +41,9 @@ class ChatRepository:
             ).order_by(latest_message_subquery.c.latest_created_at.desc())
 
     def create(self) -> Chat:
-        new_chat = Chat(title="", profile_img_url=TIRO_IMG_URL, created_at=get_now())
+        new_chat = Chat(
+            title="", profile_img_url=self._get_tiro_img_url(), created_at=get_now()
+        )
         with self.session_factory() as session:
             session.add(new_chat)
             session.commit()
@@ -48,3 +51,6 @@ class ChatRepository:
             session.commit()
             session.refresh(new_chat)
             return new_chat
+
+    def _get_tiro_img_url(self) -> str:
+        return random.choice(TIRO_IMG_URLS)
