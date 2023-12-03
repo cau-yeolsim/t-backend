@@ -1,8 +1,3 @@
 # T의 위로 PROMPT
 
 T의 위로의 인공지능 챗봇을 위한 프롬프트를 작성하는 디렉토리
-
-git pull
-```shell
-git pull origin https://github.com/cau-yeolsim/t-backend.git
-```

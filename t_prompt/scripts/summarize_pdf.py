@@ -9,20 +9,24 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def get_chunked_docs(docs: list[Document], chunk_size: int = 10_000):
+def get_chunked_docs(docs: list[Document], chunk_size: int = 10_000) -> list[Document]:
     text_count = 0
     next_docs = []
-    for doc in docs:
+    next_docs_idx_list = []
+    for idx, doc in enumerate(docs):
         text_count += len(doc.page_content)
         if text_count > chunk_size:
-            yield next_docs
+            yield next_docs_idx_list, next_docs
             text_count = 0
+            next_docs_idx_list = [idx]
             next_docs = [doc]
         else:
+            next_docs_idx_list.append(idx)
             next_docs.append(doc)
 
 
-def write(file_path: str):
+def summarize(file_path: str):
+    print(file_path + " 요약 시작.", flush=True)
     loader = PyPDFLoader(file_path)
     docs = loader.load()
     llm = ChatOpenAI(
@@ -32,12 +36,14 @@ def write(file_path: str):
     )
     chain = load_summarize_chain(llm, chain_type="stuff")
     summarized_text = ""
-    for chunk in get_chunked_docs(docs):
-        summarized_text += chain.run(chunk) + "\n"
+    for idx_list, chunk in get_chunked_docs(docs):
+        print(str(idx_list) + "chunk 에 대한 요약 시작.", flush=True)
+        summarized_text += chain.run(chunk) + "\n\n"
 
     summary_file_path = file_path.replace(".pdf", "_summary.txt")
     with open(summary_file_path, "w") as f:
         f.write(summarized_text)
+    print(file_path + " 요약 완료.", flush=True)
 
 
 def get_pdf_file_paths(root_dir: str) -> list[str]:
@@ -52,9 +58,9 @@ def get_pdf_file_paths(root_dir: str) -> list[str]:
 
 def load_pdf(root_dir: str = "/Users/shmoon/Desktop/papers"):
     pdf_file_paths = get_pdf_file_paths(root_dir)
-    write(pdf_file_paths[0])
+    for path in pdf_file_paths[4:]:
+        summarize(path)
 
 
 if __name__ == "__main__":
-    root_directory = input()
-    load_pdf(root_directory)
+    load_pdf()
