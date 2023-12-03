@@ -9,3 +9,20 @@ consist of...
 - langchain
 - dependency-injector (TBD)
 ```
+
+
+## how to run
+```shell
+sh scripts/deploy.sh
+```
+
+## .env
+```
+OPENAI_API_KEY=
+SENTRY_DSN=
+SQLALCHEMY_DATABASE_URL=
+REDIS_URL=
+REDIS_PORT=
+AES_KEY=
+```
+
