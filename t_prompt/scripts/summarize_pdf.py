@@ -1,10 +1,10 @@
 import os
-from langchain.schema.document import Document
+
+from dotenv import load_dotenv
 from langchain.chains.summarize import load_summarize_chain
 from langchain.chat_models import ChatOpenAI
 from langchain.document_loaders.pdf import PyPDFLoader
-
-from dotenv import load_dotenv
+from langchain.schema.document import Document
 
 load_dotenv()
 
